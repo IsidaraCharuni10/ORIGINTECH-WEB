@@ -33,10 +33,10 @@ const Footer = () => {
         </div>
 
         <div>
-          <h4 style={{ marginBottom: '1rem' }}>Portals</h4>
+          <h4 style={{ marginBottom: '1rem' }}>Staff</h4>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, color: 'var(--slate-4)', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <li><Link to="/admin">Admin Dashboard</Link></li>
-            <li><Link to="/agent">Agent Portal</Link></li>
+            <li><Link to="/admin/login">Admin Portal</Link></li>
+            <li><Link to="/agent/login">Agent Portal</Link></li>
           </ul>
         </div>
       </div>

@@ -36,10 +36,12 @@ import AdminPromotions from './pages/admin/AdminPromotions';
 import AdminTradeIn from './pages/admin/AdminTradeIn';
 import AdminTickets from './pages/admin/AdminTickets';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
+import AdminLogin from './pages/admin/AdminLogin';
 
 // Pages - Support Agent
 import AgentDashboard from './pages/agent/AgentDashboard';
 import AgentTicketDetail from './pages/agent/AgentTicketDetail';
+import AgentLogin from './pages/agent/AgentLogin';
 
 function App() {
   return (
@@ -68,6 +70,7 @@ function App() {
           </Route>
 
           {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="products" element={<AdminProducts />} />
@@ -81,6 +84,7 @@ function App() {
           </Route>
 
           {/* Support Agent Routes */}
+          <Route path="/agent/login" element={<AgentLogin />} />
           <Route path="/agent" element={<AgentLayout />}>
             <Route index element={<AgentDashboard />} />
             <Route path="ticket/:id" element={<AgentTicketDetail />} />

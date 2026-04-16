@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, MessageSquare, CheckCircle2, BarChart2, LogOut, Headphones } from 'lucide-react';
+import { useAppContext } from '../../context/AppContext';
+import { Navigate } from 'react-router-dom';
 
 const navItems = [
   { to: '/agent',        label: 'Support Queue',  icon: LayoutDashboard, end: true },
@@ -9,6 +11,17 @@ const navItems = [
 
 const AgentLayout = () => {
   const navigate = useNavigate();
+  const { user, setUser } = useAppContext();
+
+  // Route protection
+  if (!user || user.role !== 'agent') {
+    return <Navigate to="/agent/login" replace />;
+  }
+
+  const handleSignOut = () => {
+    setUser(null);
+    navigate('/');
+  };
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--bg-main)' }}>
@@ -78,11 +91,11 @@ const AgentLayout = () => {
               <span style={{ color: 'white', fontWeight: 700, fontSize: '0.85rem' }}>S</span>
             </div>
             <div>
-              <div style={{ color: 'white', fontSize: '0.85rem', fontWeight: 600 }}>Agent Sarah</div>
-              <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Level 2 Support</div>
+              <div style={{ color: 'white', fontSize: '0.85rem', fontWeight: 600 }}>{user.name}</div>
+              <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>{user.level || 'Support Agent'}</div>
             </div>
           </div>
-          <button onClick={() => navigate('/')} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '8px', padding: '0.55rem 0.75rem', borderRadius: '8px', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.25)', color: '#FCA5A5', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600 }}>
+          <button onClick={handleSignOut} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '8px', padding: '0.55rem 0.75rem', borderRadius: '8px', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.25)', color: '#FCA5A5', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600 }}>
             <LogOut size={14} /> Sign Out
           </button>
         </div>

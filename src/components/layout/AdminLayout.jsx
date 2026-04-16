@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Package, ShieldCheck, ShoppingBag,
-  Users, Tag, RefreshCw, Headphones, BarChart2, LogOut, ChevronRight, Store
+  Users, Tag, RefreshCw, Headphones, BarChart2, LogOut, ChevronRight, Store, Menu, X
 } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { Navigate } from 'react-router-dom';
@@ -22,6 +22,7 @@ const navItems = [
 const AdminLayout = () => {
   const navigate = useNavigate();
   const { user, setUser } = useAppContext();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Route protection
   if (!user || user.role !== 'admin') {
@@ -42,23 +43,46 @@ const AdminLayout = () => {
         .admin-nav-link.active svg { opacity:1; }
       `}</style>
 
+      {/* Sidebar Overlay (Mobile Only) */}
+      {isSidebarOpen && (
+        <div 
+          onClick={() => setIsSidebarOpen(false)}
+          className="mobile-only"
+          style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(2px)' }} 
+        />
+      )}
+
       {/* Sidebar */}
       <aside style={{
         width: '240px', flexShrink: 0,
         background: 'linear-gradient(180deg,#0A1128 0%,#0F2044 100%)',
         display: 'flex', flexDirection: 'column',
         borderRight: '1px solid rgba(255,255,255,0.06)',
-        position: 'sticky', top: 0, height: '100vh', overflowY: 'auto'
-      }}>
+        position: 'fixed', top: 0, left: 0, height: '100vh', 
+        overflowY: 'auto', zIndex: 101,
+        transition: 'transform 0.3s ease-out',
+        transform: `translateX(${isSidebarOpen ? '0' : '-100%'})`,
+      }} className="admin-sidebar">
+        <style>{`
+          @media (min-width: 1025px) {
+            .admin-sidebar { position: sticky !important; transform: none !important; }
+            .admin-main { margin-left: 0; }
+          }
+        `}</style>
         {/* Logo */}
-        <div style={{ padding: '1.5rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <div className="flex items-center gap-2" style={{ marginBottom: '0.25rem' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'linear-gradient(135deg,#3B82F6,#1D4ED8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Store size={18} color="white" />
+        <div style={{ padding: '1.5rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="flex-column">
+            <div className="flex items-center gap-2" style={{ marginBottom: '0.25rem' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'linear-gradient(135deg,#3B82F6,#1D4ED8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Store size={18} color="white" />
+              </div>
+              <span style={{ color: 'white', fontWeight: 800, fontSize: '1.05rem' }}>OriginTech</span>
             </div>
-            <span style={{ color: 'white', fontWeight: 800, fontSize: '1.05rem' }}>OriginTech</span>
+            <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.5px', textTransform: 'uppercase', paddingLeft: '2px' }}>Admin Portal</div>
           </div>
-          <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.5px', textTransform: 'uppercase', paddingLeft: '2px' }}>Admin Portal</div>
+          <button onClick={() => setIsSidebarOpen(false)} className="mobile-only" style={{ color: 'white' }}>
+            <X size={20} />
+          </button>
         </div>
 
         {/* Nav */}
@@ -70,6 +94,7 @@ const AdminLayout = () => {
               to={item.to}
               end={item.end}
               className={({ isActive }) => `admin-nav-link${isActive ? ' active' : ''}`}
+              onClick={() => setIsSidebarOpen(false)}
             >
               <item.icon size={17} style={{ opacity: 0.7, flexShrink: 0 }} />
               {item.label}
@@ -101,8 +126,17 @@ const AdminLayout = () => {
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh', overflow: 'auto' }}>
         {/* Top Bar */}
         <div style={{ padding: '1rem 2rem', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-surface)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10 }}>
-          <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-            OriginTech &nbsp;/&nbsp; <span style={{ color: 'var(--text-main)', fontWeight: 500 }}>Admin</span>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              className="mobile-only"
+              style={{ padding: '0.25rem', color: 'var(--text-main)' }}
+            >
+              <Menu size={20} />
+            </button>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }} className="desktop-only">
+              OriginTech &nbsp;/&nbsp; <span style={{ color: 'var(--text-main)', fontWeight: 500 }}>Admin</span>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <a href="/" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.82rem', color: 'var(--primary-blue)', fontWeight: 600, textDecoration: 'none' }}>

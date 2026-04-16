@@ -59,14 +59,27 @@ const Home = () => {
         `}} />
 
         <div className="container hero-grid">
-          <div style={{ paddingRight: '2rem' }}>
-            <h1 style={{ fontSize: '4.2rem', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.05, letterSpacing: '-0.02em' }}>
+          <div style={{ paddingRight: '0' }} className="hero-text-container">
+            <style dangerouslySetInnerHTML={{__html: `
+              .hero-title { font-size: 4.2rem; }
+              @media (max-width: 768px) {
+                .hero-title { font-size: 2.5rem; }
+                .hero-text-container { text-align: center; }
+              }
+            `}} />
+            <h1 className="hero-title" style={{ fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.05, letterSpacing: '-0.02em' }}>
               The Future of Tech.<br/> Right in Your Hands.
             </h1>
-            <p style={{ fontSize: '1.25rem', color: '#CBD5E1', marginBottom: '3rem', maxWidth: '90%' }}>
+            <p style={{ fontSize: '1.25rem', color: '#CBD5E1', marginBottom: '3rem', maxWidth: '100%', marginInline: 'auto' }}>
               Discover the latest smartphones, premium laptops, and next-gen accessories with verified authenticity and unmatched trade-in deals.
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-4 justify-center-mobile" style={{ flexWrap: 'wrap' }}>
+              <style dangerouslySetInnerHTML={{__html: `
+                @media (max-width: 480px) {
+                  .justify-center-mobile { justify-content: center; width: 100%; }
+                  .justify-center-mobile a { width: 100%; }
+                }
+              `}} />
               <Link to="/browse" className="btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem', backgroundColor: '#F8FAFC', color: '#0F2A56' }}>
                 {t.shopNow}
               </Link>
@@ -156,15 +169,15 @@ const Home = () => {
       
       {/* Trade In Promo Callout */}
       <section style={{ backgroundColor: 'var(--bg-surface)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '5rem 1rem' }}>
-        <div className="container flex items-center justify-between gap-4">
-          <div style={{ flex: 1 }}>
-            <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Trade in. Upgrade.</h2>
+        <div className="container flex items-center justify-between gap-6 flex-wrap md-grid-cols-1">
+          <div style={{ flex: '1 1 500px', minWidth: '300px' }}>
+            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 2.5rem)', marginBottom: '1rem' }}>Trade in. Upgrade.</h2>
             <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '2rem', maxWidth: '500px' }}>
               Get credit towards your next device when you trade in your eligible smartphone or tablet. The process is quick, easy, and secure.
             </p>
             <Link to="/trade-in" className="btn-primary">Get Your Valuation</Link>
           </div>
-          <div style={{ flex: 1, position: 'relative', display: 'flex', justifyContent: 'center' }}>
+          <div style={{ flex: '1 1 400px', position: 'relative', display: 'flex', justifyContent: 'center' }}>
             <div style={{ width: '100%', maxWidth: '420px', position: 'relative' }}>
                {/* Decorative Glow */}
                <div style={{ position: 'absolute', top: '0', left: '0', right: '0', bottom: '0', background: 'radial-gradient(circle at center, rgba(59,130,246,0.15), transparent 70%)', zIndex: 0 }}></div>
@@ -212,8 +225,8 @@ const Home = () => {
 
       {/* Flash Sale Section */}
       <section className="container" style={{ padding: '5rem 1rem' }}>
-        <div style={{ display: 'flex', backgroundColor: '#1A1D24', borderRadius: '24px', overflow: 'hidden', color: 'white' }}>
-          <div style={{ flex: 1, padding: '4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', backgroundColor: '#1A1D24', borderRadius: '24px', overflow: 'hidden', color: 'white', flexWrap: 'wrap' }}>
+          <div style={{ flex: '1 1 500px', padding: 'clamp(2rem, 5vw, 4rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <span style={{ color: '#3B82F6', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', fontSize: '0.8rem', marginBottom: '1rem' }}>Flash Sale Ending Soon</span>
             <h2 style={{ fontSize: '3rem', lineHeight: 1.1, marginBottom: '2rem' }}>OriginBook Pro<br/>16"</h2>
             
@@ -237,7 +250,7 @@ const Home = () => {
               <Link to="/product/p4" className="btn-primary" style={{ padding: '1rem 2rem' }}>Claim This Offer</Link>
             </div>
           </div>
-          <div style={{ flex: 1, backgroundColor: '#E2E8F0', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ flex: '1 1 500px', backgroundColor: '#E2E8F0', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px' }}>
              <div style={{ position: 'absolute', top: '2rem', right: '2rem', backgroundColor: '#2563EB', color: 'white', padding: '1rem', borderRadius: '50%', fontWeight: 700, fontSize: '1.2rem', transform: 'rotate(15deg)' }}>
                -24%
              </div>
@@ -280,11 +293,11 @@ const Home = () => {
            <div style={{ position: 'relative', zIndex: 1, maxWidth: '600px', margin: '0 auto' }}>
              <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', color: '#1E293B' }}>Stay ahead of the curve.</h2>
              <p style={{ color: '#475569', fontSize: '1.1rem', marginBottom: '2.5rem' }}>
-               Join our inner circle to receive exclusive early access to product launches, weekly curated tech deals, and member-only events.
+               Join our inner circle to receive exclusive early access to product launches and curated tech deals.
              </p>
-             <div className="flex gap-2" style={{ maxWidth: '400px', margin: '0 auto', marginBottom: '1rem' }}>
-               <input type="email" placeholder="Enter email to receive latest drops" style={{ flex: 1, padding: '1rem 1.5rem', borderRadius: 'var(--radius-xl)', border: 'none', outline: 'none' }} />
-               <button className="btn-primary" style={{ padding: '1rem 2rem', borderRadius: 'var(--radius-xl)' }}>Subscribe Now</button>
+             <div className="flex gap-2" style={{ maxWidth: '450px', margin: '0 auto', marginBottom: '1rem', flexWrap: 'wrap' }}>
+               <input type="email" placeholder="Enter email" style={{ flex: '1 1 250px', padding: '1rem 1.5rem', borderRadius: 'var(--radius-xl)', border: 'none', outline: 'none' }} />
+               <button className="btn-primary" style={{ flex: '1 1 100px', padding: '1rem 2rem', borderRadius: 'var(--radius-xl)' }}>Subscribe</button>
              </div>
              <div style={{ fontSize: '0.8rem', color: '#64748B' }}>By subscribing you agree to our Privacy Policy and Terms of Service.</div>
            </div>

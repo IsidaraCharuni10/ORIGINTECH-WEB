@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, User, Search, Moon, Sun, Globe, X, ArrowRight } from 'lucide-react';
+import { ShoppingCart, User, Search, Moon, Sun, Globe, X, ArrowRight, Menu } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { translationStrings, mockProducts, formatPrice } from '../../data/mockData';
 
@@ -12,6 +12,7 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const searchRef = useRef(null);
 
   const toggleTheme = () => {
@@ -93,12 +94,21 @@ const Navbar = () => {
 
       {/* Main Nav */}
       <div className="container flex justify-between items-center" style={{ padding: '1rem' }}>
-        <Link to="/" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-blue)', textDecoration: 'none' }}>
-          OriginTech
-        </Link>
+        <div className="flex items-center gap-4">
+          <button 
+            className="mobile-only" 
+            onClick={() => setIsMobileMenuOpen(true)}
+            style={{ color: 'var(--text-main)' }}
+          >
+            <Menu size={24} />
+          </button>
+          <Link to="/" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-blue)', textDecoration: 'none' }}>
+            OriginTech
+          </Link>
+        </div>
 
-        {/* Search Bar */}
-        <div ref={searchRef} style={{ flex: 1, maxWidth: '400px', margin: '0 2rem', position: 'relative' }}>
+        {/* Search Bar (Desktop) */}
+        <div ref={searchRef} className="desktop-only" style={{ flex: 1, maxWidth: '400px', margin: '0 2rem', position: 'relative' }}>
           <input 
             type="text" 
             placeholder={t.searchPlaceholder}
@@ -183,16 +193,16 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Categories */}
-        <nav className="flex gap-6" style={{ fontWeight: 500 }}>
+        {/* Categories (Desktop) */}
+        <nav className="desktop-only flex gap-8" style={{ fontWeight: 500 }}>
           <Link to="/browse?category=phones" style={{ color: 'var(--text-main)', textDecoration: 'none', transition: 'color 0.2s' }}>{t.phones}</Link>
           <Link to="/browse?category=tablets" style={{ color: 'var(--text-main)', textDecoration: 'none' }}>{t.tablets}</Link>
           <Link to="/browse?category=accessories" style={{ color: 'var(--text-main)', textDecoration: 'none' }}>{t.accessories}</Link>
         </nav>
 
         {/* Actions */}
-        <div className="flex gap-4 items-center" style={{ marginLeft: '2rem' }}>
-          <button onClick={toggleTheme} style={{ color: 'var(--text-main)', background: 'none', border: 'none', cursor: 'pointer' }}>
+        <div className="flex gap-4 items-center">
+          <button className="desktop-only" onClick={toggleTheme} style={{ color: 'var(--text-main)', background: 'none', border: 'none', cursor: 'pointer' }}>
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
           
@@ -215,10 +225,59 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
+
+      {/* Mobile Menu Sidebar */}
+      {isMobileMenuOpen && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 1000,
+          backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
+          animation: 'fadeIn 0.2s ease-out'
+        }} onClick={() => setIsMobileMenuOpen(false)}>
+          <div 
+            style={{
+              width: '80%', maxWidth: '300px', height: '100%',
+              backgroundColor: 'var(--bg-surface)',
+              padding: '2rem',
+              animation: 'slideIn 0.3s ease-out'
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center" style={{ marginBottom: '2rem' }}>
+              <span style={{ fontWeight: 800, color: 'var(--primary-blue)', fontSize: '1.2rem' }}>Menu</span>
+              <button onClick={() => setIsMobileMenuOpen(false)}><X size={24} /></button>
+            </div>
+
+            <nav className="flex flex-column gap-6" style={{ fontSize: '1.1rem', fontWeight: 600 }}>
+              <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>{t.home || 'Home'}</Link>
+              <Link to="/browse?category=phones" onClick={() => setIsMobileMenuOpen(false)}>{t.phones}</Link>
+              <Link to="/browse?category=tablets" onClick={() => setIsMobileMenuOpen(false)}>{t.tablets}</Link>
+              <Link to="/browse?category=accessories" onClick={() => setIsMobileMenuOpen(false)}>{t.accessories}</Link>
+              <div style={{ height: '1px', backgroundColor: 'var(--border-color)', margin: '1rem 0' }} />
+              <Link to="/support" onClick={() => setIsMobileMenuOpen(false)}>Support</Link>
+              <Link to="/tracking" onClick={() => setIsMobileMenuOpen(false)}>Order Tracking</Link>
+              
+              <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
+                <button onClick={toggleTheme} className="flex items-center gap-2" style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-soft)' }}>
+                  {theme === 'dark' ? <><Sun size={18} /> Light Mode</> : <><Moon size={18} /> Dark Mode</>}
+                </button>
+              </div>
+            </nav>
+          </div>
+        </div>
+      )}
+
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideIn {
+          from { transform: translateX(-100%); }
+          to { transform: translateX(0); }
         }
       `}</style>
     </header>

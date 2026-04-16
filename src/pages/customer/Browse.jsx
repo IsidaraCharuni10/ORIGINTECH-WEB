@@ -41,13 +41,13 @@ const Browse = () => {
   });
 
   return (
-    <div className="container" style={{ padding: '3rem 1rem' }}>
+    <div className="container" style={{ padding: 'clamp(1rem, 5vw, 3rem) 1rem' }}>
       {/* Header & Search */}
       <div className="flex justify-between items-center flex-wrap gap-4" style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '2.5rem' }}>
+        <h1 style={{ fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', fontWeight: 800 }}>
           {CATEGORIES.find(c => c.key === selectedCategory)?.label || 'All Products'}
         </h1>
-        <div style={{ position: 'relative', width: '300px' }}>
+        <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
           <input 
             type="text" 
             placeholder="Search catalog..." 
@@ -60,9 +60,14 @@ const Browse = () => {
       </div>
 
 
-      <div className="flex gap-6" style={{ alignItems: 'flex-start' }}>
+      <div className="flex gap-6 flex-wrap" style={{ alignItems: 'flex-start' }}>
         {/* Sidebar Filters */}
-        <aside style={{ width: '250px', flexShrink: 0, backgroundColor: 'var(--bg-surface)', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
+        <aside style={{ width: '100%', maxWidth: '250px', flexShrink: 0, backgroundColor: 'var(--bg-surface)', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }} className="browse-sidebar">
+          <style dangerouslySetInnerHTML={{__html: `
+            @media (max-width: 768px) {
+              .browse-sidebar { max-width: 100% !important; }
+            }
+          `}} />
           <div className="flex items-center gap-2" style={{ marginBottom: '1.5rem', fontWeight: 600, fontSize: '1.1rem' }}>
             <Filter size={18} /> Filters
           </div>
@@ -96,15 +101,15 @@ const Browse = () => {
         </aside>
 
         {/* Product Grid */}
-        <div style={{ flex: 1 }}>
-          <div className="flex justify-between items-center" style={{ marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border-color)' }}>
-            <span style={{ color: 'var(--text-muted)' }}>Showing {filteredProducts.length} results</span>
+        <div style={{ flex: '1 1 300px' }}>
+          <div className="flex justify-between items-center flex-wrap gap-3" style={{ marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border-color)' }}>
+            <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Showing {filteredProducts.length} results</span>
             <div className="flex items-center gap-2">
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Sort by:</span>
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Sort by:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface)', color: 'var(--text-main)', outline: 'none' }}
+                style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface)', color: 'var(--text-main)', outline: 'none', fontSize: '0.9rem' }}
               >
                 <option value="featured">Featured</option>
                 <option value="price-asc">Price: Low to High</option>

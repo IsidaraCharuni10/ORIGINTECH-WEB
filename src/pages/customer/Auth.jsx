@@ -44,8 +44,8 @@ const Auth = () => {
   };
 
   return (
-    <div className="container" style={{ padding: '5rem 1rem', display: 'flex', justifyContent: 'center' }}>
-      <div className="card" style={{ width: '100%', maxWidth: '450px', padding: '2rem' }}>
+    <div className="container" style={{ padding: 'clamp(2rem, 10vw, 5rem) 1rem', display: 'flex', justifyContent: 'center' }}>
+      <div className="card" style={{ width: '100%', maxWidth: '450px', padding: 'clamp(1.5rem, 5vw, 2rem)' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '1.8rem', color: 'var(--primary-blue)', marginBottom: '0.5rem' }}>OriginTech</h1>
           <p style={{ color: 'var(--text-muted)' }}>Welcome back to the future</p>

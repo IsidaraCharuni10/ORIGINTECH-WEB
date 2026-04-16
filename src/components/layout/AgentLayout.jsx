@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, CheckCircle2, BarChart2, LogOut, Headphones } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, CheckCircle2, BarChart2, LogOut, Headphones, Menu, X } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { Navigate } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ const navItems = [
 const AgentLayout = () => {
   const navigate = useNavigate();
   const { user, setUser } = useAppContext();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Route protection
   if (!user || user.role !== 'agent') {
@@ -31,23 +32,45 @@ const AgentLayout = () => {
         .agent-nav-link.active { background:rgba(255,255,255,0.15); color:white; font-weight:700; }
       `}</style>
 
+      {/* Sidebar Overlay (Mobile Only) */}
+      {isSidebarOpen && (
+        <div 
+          onClick={() => setIsSidebarOpen(false)}
+          className="mobile-only"
+          style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(2px)' }} 
+        />
+      )}
+
       {/* Sidebar */}
       <aside style={{
         width: '240px', flexShrink: 0,
         background: 'linear-gradient(180deg,#0A1128 0%,#10294A 100%)',
         display: 'flex', flexDirection: 'column',
         borderRight: '1px solid rgba(255,255,255,0.06)',
-        position: 'sticky', top: 0, height: '100vh', overflowY: 'auto'
-      }}>
+        position: 'fixed', top: 0, left: 0, height: '100vh', 
+        overflowY: 'auto', zIndex: 101,
+        transition: 'transform 0.3s ease-out',
+        transform: `translateX(${isSidebarOpen ? '0' : '-100%'})`,
+      }} className="agent-sidebar">
+        <style>{`
+          @media (min-width: 1025px) {
+            .agent-sidebar { position: sticky !important; transform: none !important; }
+          }
+        `}</style>
         {/* Logo */}
-        <div style={{ padding: '1.5rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.25rem' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'linear-gradient(135deg,#10B981,#059669)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Headphones size={18} color="white" />
+        <div style={{ padding: '1.5rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="flex-column">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.25rem' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'linear-gradient(135deg,#10B981,#059669)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Headphones size={18} color="white" />
+              </div>
+              <span style={{ color: 'white', fontWeight: 800, fontSize: '1rem' }}>Support</span>
             </div>
-            <span style={{ color: 'white', fontWeight: 800, fontSize: '1rem' }}>Support</span>
+            <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.5px', textTransform: 'uppercase', paddingLeft: '2px' }}>Agent Portal</div>
           </div>
-          <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.5px', textTransform: 'uppercase', paddingLeft: '2px' }}>Agent Portal</div>
+          <button onClick={() => setIsSidebarOpen(false)} className="mobile-only" style={{ color: 'white' }}>
+            <X size={20} />
+          </button>
         </div>
 
         {/* Online Status */}
@@ -61,10 +84,10 @@ const AgentLayout = () => {
         {/* Nav */}
         <nav style={{ padding: '1rem 0.75rem', flex: 1 }}>
           <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: 'rgba(255,255,255,0.3)', padding: '0 0.5rem', marginBottom: '0.5rem' }}>Navigation</div>
-          <NavLink to="/agent" end className={({ isActive }) => `agent-nav-link${isActive ? ' active' : ''}`}>
+          <NavLink to="/agent" end className={({ isActive }) => `agent-nav-link${isActive ? ' active' : ''}`} onClick={() => setIsSidebarOpen(false)}>
             <LayoutDashboard size={17} style={{ opacity: 0.7 }} /> Support Queue
           </NavLink>
-          <NavLink to="/agent/ticket/TKT-99234" className={({ isActive }) => `agent-nav-link${isActive ? ' active' : ''}`}>
+          <NavLink to="/agent/ticket/TKT-99234" className={({ isActive }) => `agent-nav-link${isActive ? ' active' : ''}`} onClick={() => setIsSidebarOpen(false)}>
             <MessageSquare size={17} style={{ opacity: 0.7 }} /> Sample Ticket
           </NavLink>
 
@@ -105,11 +128,20 @@ const AgentLayout = () => {
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh', overflow: 'auto' }}>
         {/* Top Bar */}
         <div style={{ padding: '1rem 2rem', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-surface)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10 }}>
-          <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-            OriginTech &nbsp;/&nbsp; <span style={{ color: 'var(--text-main)', fontWeight: 500 }}>Agent Portal</span>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              className="mobile-only"
+              style={{ padding: '0.25rem', color: 'var(--text-main)' }}
+            >
+              <Menu size={20} />
+            </button>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }} className="desktop-only">
+              OriginTech &nbsp;/&nbsp; <span style={{ color: 'var(--text-main)', fontWeight: 500 }}>Agent Portal</span>
+            </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', color: '#10B981', fontWeight: 700 }}>
-            <CheckCircle2 size={15} /> SLA Status: On Track
+            <CheckCircle2 size={15} className="desktop-only" /> <span className="desktop-only">SLA Status:</span> On Track
           </div>
         </div>
         <div style={{ padding: '2rem', flex: 1 }}>
